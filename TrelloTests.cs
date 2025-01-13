@@ -1,4 +1,4 @@
-using Newtonsoft.Json.Linq;
+ï»¿using Newtonsoft.Json.Linq;
 using System.Net;
 
 namespace TrelloTestSuite
@@ -20,7 +20,7 @@ namespace TrelloTestSuite
             string apiToken = "";
             _client = new TrelloApiClient(apiKey, apiToken);
 
-            // Inicjalizacja klienta API bez autoryzacji (do testów nieautoryzowanych)
+            // Inicjalizacja klienta API bez autoryzacji (do testÃ³w nieautoryzowanych)
             _nonAuthorizedClient = new TrelloApiClient("", "");
         }
 
@@ -30,7 +30,7 @@ namespace TrelloTestSuite
             // Test tworzenia nowej planszy
             var response = await _client.CreateBoard("New board");
 
-            // Sprawdzamy, czy odpowiedŸ jest poprawna i nie pusta
+            // Sprawdzamy, czy odpowiedÅº jest poprawna i nie pusta
             Assert.Multiple(() =>
             {
                 Assert.That(response.IsSuccessful, Is.True, "Board creation failed.");
@@ -48,10 +48,10 @@ namespace TrelloTestSuite
         [Test, Order(2)]
         public async Task CreateBoard_ShouldReturnBadRequest()
         {
-            // Test próby stworzenia planszy bez podania nazwy
+            // Test prÃ³by stworzenia planszy bez podania nazwy
             var response = await _client.CreateBoard("");
 
-            // Sprawdzamy, czy odpowiedŸ zawiera kod b³êdu 400 (BadRequest)
+            // Sprawdzamy, czy odpowiedÅº zawiera kod bÅ‚Ä™du 400 (BadRequest)
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Board with no name was created.");
         }
 
@@ -61,14 +61,14 @@ namespace TrelloTestSuite
             // Test pobierania planszy po jej utworzeniu
             var response = await _client.GetBoard(_boardId);
 
-            // Sprawdzamy, czy odpowiedŸ jest poprawna i nie pusta
+            // Sprawdzamy, czy odpowiedÅº jest poprawna i nie pusta
             Assert.Multiple(() =>
             {
                 Assert.That(response.IsSuccessful, Is.True, "Board retrive failed.");
                 Assert.That(response.Content, Is.Not.Null.And.Not.Empty, "There is no response.");
             });
 
-            // Parsowanie odpowiedzi JSON i porównanie ID planszy
+            // Parsowanie odpowiedzi JSON i porÃ³wnanie ID planszy
             var responseContent = JObject.Parse(response.Content);
             string boardId = $"{responseContent["id"]}";
             Assert.That(boardId, Is.EqualTo(_boardId), "Board retrive failed. Ids does not match.");
@@ -77,11 +77,11 @@ namespace TrelloTestSuite
         [Test, Order(4)]
         public async Task GetBoard_ShouldReturnNotFound()
         {
-            // Test próby pobrania planszy o nieistniej¹cym ID
+            // Test prÃ³by pobrania planszy o nieistniejÄ…cym ID
             string fakeId = BitConverter.ToString(Guid.NewGuid().ToByteArray(), 0, 12).Replace("-", "").ToLower();
             var response = await _client.GetBoard(fakeId);
 
-            // Sprawdzamy, czy odpowiedŸ zawiera kod b³êdu 404 (NotFound)
+            // Sprawdzamy, czy odpowiedÅº zawiera kod bÅ‚Ä™du 404 (NotFound)
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound), "Board with non existen ID was returned.");
         }
 
@@ -92,17 +92,17 @@ namespace TrelloTestSuite
             string newName = "Updated board";
             var response = await _client.UpdateBoard(_boardId, newName);
 
-            // Sprawdzamy, czy odpowiedŸ jest poprawna
+            // Sprawdzamy, czy odpowiedÅº jest poprawna
             Assert.That(response.IsSuccessful, Is.True, "Board update failed.");
 
-            // Pobieramy zaktualizowan¹ planszê i sprawdzamy poprawnoœæ
+            // Pobieramy zaktualizowanÄ… planszÄ™ i sprawdzamy poprawnoÅ›Ä‡
             response = await _client.GetBoard(_boardId);
             Assert.That(response.Content, Is.Not.Null.And.Not.Empty, "There is no response.");
             var responseContent = JObject.Parse(response.Content);
             string boardId = $"{responseContent["id"]}";
             string boardName = $"{responseContent["name"]}";
 
-            // Sprawdzamy, czy ID planszy siê zgadza i nazwa zosta³a zaktualizowana
+            // Sprawdzamy, czy ID planszy siÄ™ zgadza i nazwa zostaÅ‚a zaktualizowana
             Assert.Multiple(() =>
             {
                 Assert.That(boardId, Is.EqualTo(_boardId), "Board update failed. Ids does not match.");
@@ -113,20 +113,20 @@ namespace TrelloTestSuite
         [Test, Order(6)]
         public async Task CreateBoard_ShouldReturnUnauthorized()
         {
-            // Test próby utworzenia planszy bez autoryzacji
+            // Test prÃ³by utworzenia planszy bez autoryzacji
             var response = await _nonAuthorizedClient.CreateBoard("New board");
 
-            // Sprawdzamy, czy odpowiedŸ zawiera kod b³êdu 401 (Unauthorized)
+            // Sprawdzamy, czy odpowiedÅº zawiera kod bÅ‚Ä™du 401 (Unauthorized)
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), "Board created but unauthorized.");
         }
 
         [Test, Order(7)]
         public async Task CreateList_ShouldReturnSuccess()
         {
-            // Test tworzenia listy na istniej¹cej planszy
+            // Test tworzenia listy na istniejÄ…cej planszy
             var response = await _client.CreateList("New list", _boardId);
 
-            // Sprawdzamy, czy odpowiedŸ jest poprawna i nie pusta
+            // Sprawdzamy, czy odpowiedÅº jest poprawna i nie pusta
             Assert.Multiple(() =>
             {
                 Assert.That(response.IsSuccessful, Is.True, "List creation failed.");
@@ -144,10 +144,10 @@ namespace TrelloTestSuite
         [Test, Order(8)]
         public async Task CreateList_ShouldReturnBadRequest()
         {
-            // Test próby stworzenia listy bez nazwy
+            // Test prÃ³by stworzenia listy bez nazwy
             var response = await _client.CreateList("", _boardId);
 
-            // Sprawdzamy, czy odpowiedŸ zawiera kod b³êdu 400 (BadRequest)
+            // Sprawdzamy, czy odpowiedÅº zawiera kod bÅ‚Ä™du 400 (BadRequest)
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "List with no name was created.");
         }
 
@@ -157,14 +157,14 @@ namespace TrelloTestSuite
             // Test pobierania listy po jej utworzeniu
             var response = await _client.GetList(_listId);
 
-            // Sprawdzamy, czy odpowiedŸ jest poprawna i nie pusta
+            // Sprawdzamy, czy odpowiedÅº jest poprawna i nie pusta
             Assert.Multiple(() =>
             {
                 Assert.That(response.IsSuccessful, Is.True, "Get list failed.");
                 Assert.That(response.Content, Is.Not.Null.And.Not.Empty, "Get list failed. There is no response.");
             });
 
-            // Parsowanie odpowiedzi JSON i porównanie ID listy
+            // Parsowanie odpowiedzi JSON i porÃ³wnanie ID listy
             var responseContent = JObject.Parse(response.Content);
             string listId = $"{responseContent["id"]}";
             Assert.That(listId, Is.EqualTo(_listId), "List Id does not match.");
@@ -173,11 +173,11 @@ namespace TrelloTestSuite
         [Test, Order(10)]
         public async Task GetList_ShouldReturnNotFound()
         {
-            // Test próby pobrania listy o nieistniej¹cym ID
+            // Test prÃ³by pobrania listy o nieistniejÄ…cym ID
             string fakeId = BitConverter.ToString(Guid.NewGuid().ToByteArray(), 0, 12).Replace("-", "").ToLower();
             var response = await _client.GetList(fakeId);
 
-            // Sprawdzamy, czy odpowiedŸ zawiera kod b³êdu 404 (NotFound)
+            // Sprawdzamy, czy odpowiedÅº zawiera kod bÅ‚Ä™du 404 (NotFound)
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound), "List with non existing ID was returned.");
         }
 
@@ -188,17 +188,17 @@ namespace TrelloTestSuite
             string newName = "Updated list";
             var response = await _client.UpdateList(_listId, newName);
 
-            // Sprawdzamy, czy odpowiedŸ jest poprawna
+            // Sprawdzamy, czy odpowiedÅº jest poprawna
             Assert.That(response.IsSuccessful, Is.True, "List update failed.");
 
-            // Pobieramy zaktualizowan¹ listê i sprawdzamy poprawnoœæ
+            // Pobieramy zaktualizowanÄ… listÄ™ i sprawdzamy poprawnoÅ›Ä‡
             response = await _client.GetList(_listId);
             Assert.That(response.Content, Is.Not.Null.And.Not.Empty, "There is no response.");
             var responseContent = JObject.Parse(response.Content);
             string listId = $"{responseContent["id"]}";
             string listName = $"{responseContent["name"]}";
 
-            // Sprawdzamy, czy ID listy siê zgadza i nazwa zosta³a zaktualizowana
+            // Sprawdzamy, czy ID listy siÄ™ zgadza i nazwa zostaÅ‚a zaktualizowana
             Assert.Multiple(() =>
             {
                 Assert.That(listId, Is.EqualTo(_listId), "List update failed. Ids does not match.");
@@ -209,20 +209,20 @@ namespace TrelloTestSuite
         [Test, Order(12)]
         public async Task CreateList_ShouldReturnUnauthorized()
         {
-            // Test próby utworzenia listy bez autoryzacji
+            // Test prÃ³by utworzenia listy bez autoryzacji
             var response = await _nonAuthorizedClient.CreateList("New list", _boardId);
 
-            // Sprawdzamy, czy odpowiedŸ zawiera kod b³êdu 401 (Unauthorized)
+            // Sprawdzamy, czy odpowiedÅº zawiera kod bÅ‚Ä™du 401 (Unauthorized)
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), "List created but unauthorized.");
         }
 
         [Test, Order(13)]
         public async Task CreateCard_ShouldReturnSuccess()
         {
-            // Test tworzenia karty na istniej¹cej liœcie
+            // Test tworzenia karty na istniejÄ…cej liÅ›cie
             var response = await _client.CreateCard("New card", "New description", _listId);
 
-            // Sprawdzamy, czy odpowiedŸ jest poprawna i nie pusta
+            // Sprawdzamy, czy odpowiedÅº jest poprawna i nie pusta
             Assert.Multiple(() =>
             {
                 Assert.That(response.IsSuccessful, Is.True, "Card creation failed.");
@@ -251,14 +251,14 @@ namespace TrelloTestSuite
             // Test pobierania karty po jej utworzeniu
             var response = await _client.GetCard(_cardId);
 
-            // Sprawdzamy, czy odpowiedŸ jest poprawna i nie pusta
+            // Sprawdzamy, czy odpowiedÅº jest poprawna i nie pusta
             Assert.Multiple(() =>
             {
                 Assert.That(response.IsSuccessful, Is.True, "Card retrive failed.");
                 Assert.That(response.Content, Is.Not.Null.And.Not.Empty, "There is no response.");
             });
 
-            // Parsowanie odpowiedzi JSON i porównanie ID karty
+            // Parsowanie odpowiedzi JSON i porÃ³wnanie ID karty
             var responseContent = JObject.Parse(response.Content);
             string cardId = $"{responseContent["id"]}";
             Assert.That(cardId, Is.EqualTo(_cardId), "Card retrive failed. Ids does not match.");
@@ -267,26 +267,26 @@ namespace TrelloTestSuite
         [Test, Order(16)]
         public async Task GetCard_ShouldReturnNotFound()
         {
-            // Test próby pobrania karty o nieistniej¹cym ID
+            // Test prÃ³by pobrania karty o nieistniejÄ…cym ID
             string fakeId = BitConverter.ToString(Guid.NewGuid().ToByteArray(), 0, 12).Replace("-", "").ToLower();
             var response = await _client.GetCard(fakeId);
 
-            // Sprawdzamy, czy odpowiedŸ zawiera kod b³êdu 404 (NotFound)
+            // Sprawdzamy, czy odpowiedÅº zawiera kod bÅ‚Ä™du 404 (NotFound)
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound), "Card with non existen ID was returned.");
         }
 
         [Test, Order(17)]
         public async Task UpdateCard_ShouldReturnSuccess()
         {
-            // Test aktualizacji tytu³u oraz opisu karty
+            // Test aktualizacji tytuÅ‚u oraz opisu karty
             string newName = "Updated card";
             string newDesc = "Updated description";
             var response = await _client.UpdateCard(_cardId, newName, newDesc);
 
-            // Sprawdzamy, czy odpowiedŸ jest poprawna
+            // Sprawdzamy, czy odpowiedÅº jest poprawna
             Assert.That(response.IsSuccessful, Is.True, "Card update failed.");
 
-            // Pobieramy zaktualizowan¹ kartê i sprawdzamy poprawnoœæ
+            // Pobieramy zaktualizowanÄ… kartÄ™ i sprawdzamy poprawnoÅ›Ä‡
             response = await _client.GetCard(_cardId);
             Assert.That(response.Content, Is.Not.Null.And.Not.Empty, "There is no response.");
             var responseContent = JObject.Parse(response.Content);
@@ -294,7 +294,7 @@ namespace TrelloTestSuite
             string cardName = $"{responseContent["name"]}";
             string cardDesc = $"{responseContent["desc"]}";
 
-            // Sprawdzamy, czy ID karty siê zgadza, tytu³ i opis zosta³ zaktualizowany
+            // Sprawdzamy, czy ID karty siÄ™ zgadza, tytuÅ‚ i opis zostaÅ‚ zaktualizowany
             Assert.Multiple(() =>
             {
                 Assert.That(cardId, Is.EqualTo(_cardId), "Board update failed. Ids does not match.");
@@ -306,36 +306,36 @@ namespace TrelloTestSuite
         [Test, Order(18)]
         public async Task CreateCard_ShouldReturnUnauthorized()
         {
-            // Test próby utworzenia karty bez autoryzacji
+            // Test prÃ³by utworzenia karty bez autoryzacji
             var response = await _nonAuthorizedClient.CreateCard("New card", "New description", _listId);
 
-            // Sprawdzamy, czy odpowiedŸ zawiera kod b³êdu 401 (Unauthorized)
+            // Sprawdzamy, czy odpowiedÅº zawiera kod bÅ‚Ä™du 401 (Unauthorized)
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), "Card created but unauthorized.");
         }
 
         [Test, Order(19)]
         public async Task DeleteBoard_ShouldReturnUnauthorized()
         {
-            // Test próby usuniêcia tablicy bez autoryzacji
+            // Test prÃ³by usuniÄ™cia tablicy bez autoryzacji
             var response = await _nonAuthorizedClient.DeleteBoard(_boardId);
 
-            // Sprawdzamy, czy odpowiedŸ zawiera kod b³êdu 401 (Unauthorized)
+            // Sprawdzamy, czy odpowiedÅº zawiera kod bÅ‚Ä™du 401 (Unauthorized)
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), "Board deleted but unauthorized.");
         }
 
         [Test, Order(20)]
         public async Task DeleteBoard_ShouldReturnSuccess()
         {
-            // Test próby usuniêcia tablicy
+            // Test prÃ³by usuniÄ™cia tablicy
             var response = await _client.DeleteBoard(_boardId);
 
-            // Sprawdzamy, czy odpowiedŸ jest poprawna
+            // Sprawdzamy, czy odpowiedÅº jest poprawna
             Assert.That(response.IsSuccessful, Is.True, "Board update failed.");
 
-            // Próbujemy pobraæ jeszcze raz wczeœniej usuniêt¹ tablicê
+            // PrÃ³bujemy pobraÄ‡ jeszcze raz wczeÅ›niej usuniÄ™tÄ… tablicÄ™
             response = await _client.GetBoard(_boardId);
 
-            // Sprawdzamy, czy odpowiedŸ zawiera kod b³êdu 404 (NotFound)
+            // Sprawdzamy, czy odpowiedÅº zawiera kod bÅ‚Ä™du 404 (NotFound)
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound), "Board still exists after deletion.");
         }
     }
